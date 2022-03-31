@@ -1,42 +1,52 @@
-import { User } from "../../model/User";
-import { IUsersRepository, ICreateUserDTO } from "../IUsersRepository";
+import { User } from '../../model/User';
+import { IUsersRepository, ICreateUserDTO } from '../IUsersRepository';
 
 class UsersRepository implements IUsersRepository {
-  private users: User[];
+	private users: User[];
 
-  private static INSTANCE: UsersRepository;
+	private static INSTANCE: UsersRepository;
 
-  private constructor() {
-    this.users = [];
-  }
+	private constructor() {
+		this.users = [];
+	}
 
-  public static getInstance(): UsersRepository {
-    if (!UsersRepository.INSTANCE) {
-      UsersRepository.INSTANCE = new UsersRepository();
-    }
+	public static getInstance(): UsersRepository {
+		if (!UsersRepository.INSTANCE) {
+			UsersRepository.INSTANCE = new UsersRepository();
+		}
 
-    return UsersRepository.INSTANCE;
-  }
+		return UsersRepository.INSTANCE;
+	}
 
-  create({ name, email }: ICreateUserDTO): User {
-    // Complete aqui
-  }
+	create({ name, email }: ICreateUserDTO): User {
+		const user = new User();
 
-  findById(id: string): User | undefined {
-    // Complete aqui
-  }
+		user.name = name;
+		user.email = email;
+		user.created_at = new Date();
+		user.updated_at = new Date();
 
-  findByEmail(email: string): User | undefined {
-    // Complete aqui
-  }
+		this.users.push(user);
 
-  turnAdmin(receivedUser: User): User {
-    // Complete aqui
-  }
+		return user;
+	}
 
-  list(): User[] {
-    // Complete aqui
-  }
+	findById(id: string): User | undefined {
+		return this.users.find((user) => user.id === id);
+	}
+
+	findByEmail(email: string): User | undefined {
+		return this.users.find((user) => user.email === email);
+	}
+
+	turnAdmin(receivedUser: User): User {
+		receivedUser.admin = true;
+		return receivedUser;
+	}
+
+	list(): User[] {
+		return this.users;
+	}
 }
 
 export { UsersRepository };
